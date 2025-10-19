@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kaka.best - Game Dumps Viewer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <!-- HOME PAGE -->
+    <div class="page active home-page" id="homePage">
+        <div class="home-header">
+            <h1>🚀 kaka.best</h1>
+            <p>Professional Game Dumps Viewer from GitHub</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="totalGames">0</div>
+                <div class="stat-label">Total Games</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalFiles">0</div>
+                <div class="stat-label">Total Files</div>
+            </div>
+            <div class="stat-card stat-card-clickable" onclick="window.open('https://github.com/offsetsdumps/offsetsdumps', '_blank')">
+                <div class="stat-icon">🔗</div>
+                <div class="stat-label">View on GitHub</div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" id="gameSearch" placeholder="🔍 Search games...">
+        </div>
+
+        <div class="games-grid" id="gamesGrid">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading games from GitHub...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEWER PAGE -->
+    <div class="page viewer-page" id="viewerPage">
+        <div class="viewer-header">
+            <button class="back-btn" onclick="goHome()">← Back to Games</button>
+            <div class="viewer-title">
+                <h2 id="currentGameTitle">Game Viewer</h2>
+            </div>
+            <button class="advanced-search-btn" onclick="toggleAdvancedSearch()">🔍 Advanced</button>
+        </div>
+
+        <div class="viewer-content">
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-tab active" data-tab="classes" onclick="switchCategory('classes')">
+                    <div class="sidebar-icon">📦</div>
+                    <div class="sidebar-label">Classes</div>
+                </div>
+                <div class="sidebar-tab" data-tab="structs" onclick="switchCategory('structs')">
+                    <div class="sidebar-icon">🗂️</div>
+                    <div class="sidebar-label">Structs</div>
+                </div>
+                <div class="sidebar-tab" data-tab="enums" onclick="switchCategory('enums')">
+                    <div class="sidebar-icon">🔢</div>
+                    <div class="sidebar-label">Enums</div>
+                </div>
+                <div class="sidebar-tab" data-tab="functions" onclick="switchCategory('functions')">
+                    <div class="sidebar-icon">⚙️</div>
+                    <div class="sidebar-label">Functions</div>
+                </div>
+                <div class="sidebar-tab" data-tab="offsets" onclick="switchCategory('offsets')">
+                    <div class="sidebar-icon">📍</div>
+                    <div class="sidebar-label">Offsets</div>
+                </div>
+            </div>
+
+            <div class="items-panel">
+                <div class="items-search">
+                    <input type="text" id="itemSearch" placeholder="🔍 Search items...">
+                    
+                    <div class="search-filters" id="searchFilters">
+                        <div class="filter-title">Search in:</div>
+                        <div class="filter-options">
+                            <label class="filter-checkbox checked">
+                                <input type="checkbox" checked onchange="updateSearchFilters()" data-filter="names">
+                                <span>Names</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" onchange="updateSearchFilters()" data-filter="properties">
+                                <span>Properties</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" onchange="updateSearchFilters()" data-filter="offsets">
+                                <span>Offsets</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" onchange="updateSearchFilters()" data-filter="types">
+                                <span>Types</span>
+                            </label>
+                        </div>
+                        <div class="search-results-info" id="searchResultsInfo"></div>
+                    </div>
+                </div>
+                <div class="items-list" id="itemsList"></div>
+            </div>
+
+            <div class="details-panel" id="detailsPanel">
+                <div class="empty-state">
+                    <div class="empty-state-icon">👈</div>
+                    <h3>Select an item to view details</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DUMP REQUEST BUTTON -->
+    <button class="dump-request-btn" onclick="openDumpRequestModal()">
+        📝 Dump Request
+    </button>
+
+    <!-- DUMP REQUEST MODAL -->
+    <div class="modal" id="dumpRequestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 Request a Game Dump</h2>
+            </div>
+            
+            <div class="modal-body">
+                <p style="color: #888; margin-bottom: 20px; line-height: 1.6;">
+                    Want to see your favorite game on kaka.best? Here's how to request a dump:
+                </p>
+                
+                <div class="request-option">
+                    <div class="option-icon">🐙</div>
+                    <div class="option-content">
+                        <h3>Via GitHub Issue</h3>
+                        <p>Open an issue on our GitHub repository with the game name and details.</p>
+                        <button class="btn btn-primary" onclick="window.open('https://github.com/offsetsdumps/offsetsdumps/issues/new', '_blank')">
+                            Open GitHub Issue
+                        </button>
+                    </div>
+                </div>
+
+                <div class="request-option">
+                    <div class="option-icon">💬</div>
+                    <div class="option-content">
+                        <h3>Contact Me Directly</h3>
+                        <p>Reach out to me personally and I'll create the dump for you.</p>
+                        <button class="btn btn-secondary" onclick="window.open('https://github.com/offsetsdumps', '_blank')">
+                            View Profile
+                        </button>
+                    </div>
+                </div>
+
+                <div class="request-option">
+                    <div class="option-icon">🤝</div>
+                    <div class="option-content">
+                        <h3>Contribute Your Own Dump</h3>
+                        <p>Have your own dumps? Submit a pull request to add them!</p>
+                        <button class="btn btn-secondary" onclick="window.open('https://github.com/offsetsdumps/offsetsdumps', '_blank')">
+                            View Repository
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-close" onclick="closeDumpRequestModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
